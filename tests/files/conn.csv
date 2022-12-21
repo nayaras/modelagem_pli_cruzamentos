@@ -1,0 +1,3 @@
+cruzamento_inicial;cruzamento_final;grupo_mov_saida;grupo_mov_chegada;fracao;dist;vel
+0;1;0;0;1;200;40
+0;1;1;2;0.5;200;40

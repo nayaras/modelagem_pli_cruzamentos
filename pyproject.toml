@@ -1,0 +1,55 @@
+[tool.poetry]
+name = "tcc"
+version = "0.1.0"
+description = ""
+authors = ["Nayara Soares <42041514+nayaras@users.noreply.github.com>"]
+packages = [
+    { include = "tcc" },
+]
+[tool.poetry.dependencies]
+python = ">=3.9.2,<4.0"
+docplex = "^2.21.207"
+cplex = "^20.1.0"
+pydantic = "^1.9.0"
+matplotlib = "^3.6.2"
+
+
+[tool.poetry.dev-dependencies]
+black = "^22.3"
+coverage = "^6.3.1"
+mypy = "^0.910"
+pre-commit = "^2.17.0"
+flake8 = "^4.0.1"
+vulture = "^2.3"
+isort = "^5.10.1"
+pytest = "^7.0.1"
+pytest-cov = "^3.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target_version = ['py39']
+
+[tool.poetry.scripts]
+tcc = "tcc.main:main"
+
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.coverage.run]
+branch = true
+source = ["tcc"]
+
+[tool.coverage.report]
+skip_empty = true
+
+[tool.pytest.ini_options]
+addopts = "--cov=tcc  --cov-report=term  --cov-report=xml:reports/coverage.xml --junit-xml=reports/junit.xml --cov-config=pyproject.toml --cov-branch --no-cov-on-fail --doctest-modules --disable-warnings --cov-fail-under=50"
+testpaths = [
+    "./tests",
+]

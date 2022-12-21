@@ -1,0 +1,100 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-builtin-literals
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: fix-encoding-pragma
+        args:
+          - --remove
+      - id: file-contents-sorter
+        args:
+          - .gitignore
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.19.4
+    hooks:
+      - id: pyupgrade
+
+  - repo: local
+    hooks:
+      - id: format-isort
+        name: "[python] format - isort"
+        entry: poetry run isort
+        language: system
+        pass_filenames: true
+        require_serial: false
+        stages: [commit]
+        types: [python]
+
+      - id: format-black
+        name: "[python]: format - black"
+        entry: poetry run black
+        language: system
+        pass_filenames: true
+        require_serial: false
+        stages: [commit]
+        types: [python]
+
+      - id: static-check-mypy
+        name: "[python] static-check - mypy type checker"
+        files: ^tcc/
+        entry: poetry run mypy tcc/
+        language: system
+        pass_filenames: false
+        require_serial: false
+        stages: [commit, push]
+        types: [python]
+        exclude: |
+          (?x)^(
+              tests/.* |
+              scripts/.*
+          )$
+
+      - id: static-check-flake8
+        name: "[python] static-check - flake8 linter"
+        entry: poetry run flake8
+        args:
+          - --output-file=reports/flake8.txt
+          - --tee
+        language: system
+        pass_filenames: true
+        require_serial: true
+        stages: [commit, push]
+        types: [python]
+        exclude: |
+          (?x)^(
+              tests/.* |
+              scripts/.*
+          )$
+
+      - id: static-check-vulture
+        name: "[python] static-check - vulture dead code checker"
+        entry: poetry run vulture
+        args:
+          - --sort-by-size
+          - --min-confidence=70
+          - tcc
+        language: system
+        pass_filenames: false
+        require_serial: false
+        stages: [commit, push]
+        types: [python]
+
+      - id: tests
+        name: "[python] pytest tests"
+        entry: poetry run pytest tests
+        language: system
+        pass_filenames: false
+        require_serial: false
+        always_run: true
+        stages: [push]
